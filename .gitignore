@@ -5,3 +5,4 @@ keys
 .idea
 *.iml
 config.js
+config.properties
