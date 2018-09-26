@@ -37,6 +37,8 @@ public class MqttToDynamoDb {
 
         SpeedTestTopic topic = new SpeedTestTopic(topicName, qos);
         client.subscribe(topic);
+
+        // client.publish(topicName, "{ \"message\": \"Testing\" }");
     }
 
     static CommandLine parseArgs(String[] args, CommandLineParser parser) throws ParseException {
@@ -71,7 +73,20 @@ class SpeedTestTopic extends AWSIotTopic {
     }
 
     @Override
-    public void onMessage(AWSIotMessage message) {
-        System.out.println(message.getStringPayload());
+    public void onSuccess() {
+        System.out.println(String.format("connected to %s topic", getTopic()));
+        super.onSuccess();
     }
+
+    @Override
+    public void onFailure() {
+        System.out.println("Error in topic");
+        super.onFailure();
+    }
+
+    @Override
+    public void onMessage(AWSIotMessage message) {
+        System.out.println(String.format("%d : <<< %s", System.currentTimeMillis(), message.getStringPayload()));
+    }
+
 }
