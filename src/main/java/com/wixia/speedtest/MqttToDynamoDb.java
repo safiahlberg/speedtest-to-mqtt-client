@@ -10,13 +10,13 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import java.io.File;
 
 public class MqttToDynamoDb {
-    static final Option help = new Option( "help", "print this message" );
-    static final Option configFile = Option.builder("configfile" )
+    static final Option help = new Option("help", "print this message");
+    static final Option configFile = Option.builder("configfile")
             .required(false)
             .hasArg()
             .numberOfArgs(1)
-            .desc( "use given file as configuration"  )
-            .build( );
+            .desc("use given file as configuration")
+            .build();
 
     static void connectAndListen(Configuration configuration) throws AWSIotException {
         String clientEndpoint = configuration.getString("client.endpoint");
@@ -65,28 +65,29 @@ public class MqttToDynamoDb {
 
         connectAndListen(configuration);
     }
-}
 
-class SpeedTestTopic extends AWSIotTopic {
-    public SpeedTestTopic(String topic, AWSIotQos qos) {
-        super(topic, qos);
-    }
+    public static class SpeedTestTopic extends AWSIotTopic {
+        public SpeedTestTopic(String topic, AWSIotQos qos) {
+            super(topic, qos);
+        }
 
-    @Override
-    public void onSuccess() {
-        System.out.println(String.format("connected to %s topic", getTopic()));
-        super.onSuccess();
-    }
+        @Override
+        public void onSuccess() {
+            System.out.println(String.format("connected to %s topic", getTopic()));
+            super.onSuccess();
+        }
 
-    @Override
-    public void onFailure() {
-        System.out.println("Error in topic");
-        super.onFailure();
-    }
+        @Override
+        public void onFailure() {
+            System.out.println("Error in topic");
+            super.onFailure();
+        }
 
-    @Override
-    public void onMessage(AWSIotMessage message) {
-        System.out.println(String.format("%d : <<< %s", System.currentTimeMillis(), message.getStringPayload()));
+        @Override
+        public void onMessage(AWSIotMessage message) {
+            System.out.println(String.format("%d : <<< %s", System.currentTimeMillis(), message.getStringPayload()));
+        }
+
     }
 
 }
